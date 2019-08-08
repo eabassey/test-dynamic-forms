@@ -1,15 +1,27 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
-interface Field {
+export interface Field {
+  id?: string;
   type: string;
   name: string;
   label: string;
   value?: any;
+  disabled?: boolean;
+  hidden?: boolean;
   options?: {key: string, label: string}[];
   placeholder?: string;
   validators?: FieldValidator[];
-
+  hiddenWhen?: {
+    field: string; 
+    operator: 'is' | 'equals' | 'contains'; 
+    value: 'valid' | 'invalid' | string | true | false;
+  }[];
+  disableWhen?: {
+    field: string; 
+    operator: 'is' | 'equals' | 'contains'; 
+    value: 'valid' | 'invalid' | string | true | false;
+  }[];
 }
 
 interface FieldValidator {
@@ -35,10 +47,35 @@ export class AppComponent {
       name: 'firstName',
       label: 'First Name',
       value: '',
+      // hidden: true,
       validators: [
         {type: 'required', value: true, errorMessage: 'First name always is required' },
       { type: 'minLength', value: 3, errorMessage: 'First name has to be more than 3'},
       { type: 'maxLength', value: 7, errorMessage: 'This is very necessary....'}
+    ],
+    hiddenWhen: [
+      {
+        field: 'lastName',
+        operator: 'contains',
+        value: 'check'
+      },
+      {
+        field: 'email',
+        operator: 'is',
+        value: 'valid'
+      }
+    ],
+    disableWhen: [
+      {
+        field: 'lastName',
+        operator: 'contains',
+        value: 'check'
+      },
+      {
+        field: 'email',
+        operator: 'is',
+        value: 'valid'
+      }
     ]
     },
     {
@@ -46,14 +83,18 @@ export class AppComponent {
       name: 'lastName',
       label: 'Last Name',
       value: '',
-      validators: []
+      validators: [
+        {type: 'required', value: true, errorMessage: 'Last name always is required' },
+      ]
     },
     {
       type: 'text',
       name: 'email',
       label: 'Email',
       value: '',
-      validators: []
+      validators: [
+        {type: 'required', value: true, errorMessage: 'Last name always is required' },
+      ]
     },
 
     {
